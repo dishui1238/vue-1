@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Vue源码剖析</title>
+  <script src="../../dist/vue.min.js"></script>
+</head>
+
+<body>
+
+  <div id="editor">
+    <h1>初始化流程</h1>
+    <p>{{obj}}</p>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#editor',
+      data: {
+        obj: 'fooo'
+      },
+      computed: {},
+      methods: {}
+    })
+
+  </script>
+
+</body>
+
+</html>

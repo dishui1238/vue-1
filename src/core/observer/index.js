@@ -141,6 +141,8 @@ export function defineReactive (
 ) {
   const dep = new Dep()
 
+  // Object.getOwnPropertyDescriptor(obj, prop) 如果指定的属性存在于对象上，则返回其属性描述符对象（property descriptor），否则返回 undefined
+  // 属性描述符对象包含 value、writable、get、set、configurable、enumerable
   const property = Object.getOwnPropertyDescriptor(obj, key)
   if (property && property.configurable === false) {
     return
