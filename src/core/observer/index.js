@@ -43,13 +43,17 @@ export class Observer {
     this.value = value
     this.dep = new Dep()
     this.vmCount = 0
+    // Object.defineProperty
     def(value, '__ob__', this)
+    // 判断是否为数组
     if (Array.isArray(value)) {
       if (hasProto) {
+        // 替换数组原型
         protoAugment(value, arrayMethods)
       } else {
         copyAugment(value, arrayMethods, arrayKeys)
       }
+      // 对数组响应式处理
       this.observeArray(value)
     } else {
       this.walk(value)

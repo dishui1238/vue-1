@@ -31,6 +31,7 @@ Vue.prototype.$mount = function (
 
   const options = this.$options
   // resolve template/el and convert to render function
+  // 处理模板渲染
   if (!options.render) {
     let template = options.template
     if (template) {
@@ -45,6 +46,7 @@ Vue.prototype.$mount = function (
             )
           }
         }
+        // 如果是 dom 节点
       } else if (template.nodeType) {
         template = template.innerHTML
       } else {
@@ -53,6 +55,7 @@ Vue.prototype.$mount = function (
         }
         return this
       }
+      // 如果是 el
     } else if (el) {
       template = getOuterHTML(el)
     }
