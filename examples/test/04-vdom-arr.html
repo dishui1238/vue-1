@@ -1,0 +1,38 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-05-16 23:00:12
+ * @LastEditTime: 2021-05-17 07:17:02
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /Github/vue-1/examples/test/04-vdom-arr.html
+-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Vue源码剖析</title>
+    <script src="../../dist/vue.js"></script>
+  </head>
+
+  <body>
+    <div id="demo">
+      <h1>虚拟DOM</h1>
+      <div>
+        <p v-for="a in arr">{{a}}</p>
+      </div>
+    </div>
+    <script>
+      // 创建实例
+      const app = new Vue({
+        el: "#demo",
+        data: { arr: ["a", "b", "c", "d", "e"] },
+        mounted() {
+          setTimeout(() => {
+            this.arr.splice(2, 0, "f");
+          }, 1000);
+        },
+      });
+    </script>
+  </body>
+</html>
+

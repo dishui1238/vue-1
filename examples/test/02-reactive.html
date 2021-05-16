@@ -1,0 +1,45 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-05-16 21:23:52
+ * @LastEditTime: 2021-05-16 21:24:46
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /Github/vue-1/examples/test/02-reactive.html
+-->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Vue源码剖析</title>
+  <script src="../../dist/vue.js"></script>
+</head>
+
+<body>
+  <div id="demo">
+    <h1>数据响应化</h1>
+    <p>{{obj.foo}}</p>
+  </div>
+  <script>
+    // 创建实例
+    // 会有几个 Observer？ Dep？ Watcher？
+    //  2 2 1
+    //  2 4 1
+    const app = new Vue({
+      el: '#demo',
+      data: {
+        obj: {
+          foo: 'foo'
+        }
+      },
+      mounted() {
+        setTimeout(() => {
+          this.obj.foo = 'fooooo'
+        }, 1000);
+      }
+    });
+
+  </script>
+</body>
+
+</html>
