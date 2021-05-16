@@ -15,7 +15,7 @@
   </div>
 
   <script>
-    new Vue({
+    const app = new Vue({
       el: '#editor',
       data: {
         obj: 'fooo'
@@ -23,6 +23,8 @@
       computed: {},
       methods: {}
     })
+
+    console.log(app.$options.render)
 
   </script>
 
