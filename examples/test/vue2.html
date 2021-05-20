@@ -1,0 +1,53 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-05-19 07:00:22
+ * @LastEditTime: 2021-05-19 07:00:23
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /Github/vue-1/examples/test/vue2.html
+-->
+
+
+<div id="app">
+  <p>{{counter}}</p>
+</div>
+
+<script src="vue2.js"></script>
+<script>
+  const app = new KVue({
+    el: '#app',
+    data: {
+      counter: 1,
+      items: ['a', 'b', 'c']
+    },
+    render(h) {
+      // const d1 = document.createElement('div')
+      // d1.id = 'app'
+      // const p1 = document.createElement('p')
+      // p1.textContent = this.counter
+      // d1.appendChild(p1)
+      // return d1
+
+      // vnode实现
+      // return h('div', null, this.counter + '')
+
+      // 循环输出
+      let items = ['a', 'b', 'c']
+
+      if (this.counter !== 1) {
+        items = ['a', 'b', 'c', 'd']
+      }
+      return h('div', null, items.map(item => h('p', null, item)))
+
+      // return h('div', {id: 'app'}, [
+      //   h('p', null, this.counter + ''),
+      //   h('p', null, this.counter * 2 + '')
+      // ])
+    }
+  })
+  setInterval(() => {
+    app.counter++
+    // app.items.push('d')
+  }, 1000);
+
+</script>
