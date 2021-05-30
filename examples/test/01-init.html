@@ -8,6 +8,36 @@
 </head>
 
 <body>
+<!--
+  初始化流程：
+  1. new Vue    定义 Vue 构造函数 和 Vue 实例 API
+      执行 _init 函数
+      initMixin(Vue)  实现 _init 函数
+      stateMixin(Vue) 实现 $data、$props、$set、$delete、$watch 状态相关 api
+      eventsMixin(Vue) 实现 $on、$once、$off、$emit 事件相关 api
+      lifecycleMixin(Vue) 实现 _update、$forceUpdate、$destroy 声明周期相关 api
+      renderMixin(Vue) 实现 $nextTick、_render 渲染相关 api
+  2. _init
+    mergeOptions 合并选项, 添加了 direcives/filters/components
+
+    initLifecycle(vm); //  挂载 $parent,$root,$children,$refs
+    initEvents(vm); // 处理父组件传递的事件和回调
+    initRender(vm); //  $slots,$scopedSlots,_c,$createElement
+    callHook(vm, "beforeCreate");
+    initInjections(vm); // resolve injections before data/props
+    initState(vm); // 初始化 props、methods、data、computed、watch
+    initProvide(vm); // resolve provide after data/props
+    callHook(vm, "created");
+
+  3. $mount
+
+      mountComponent 挂载组件，将 vnode 转化为 dom
+      new Watcher() 创建组件渲染 watcher 监测组件 update，updateComponent 是组件的更新函数
+      updateComponent 执行初始化或更新
+          _render() 渲染组件获取 vdom
+          _update() 将 vdom 转为 dom， 初始化(!prevVnode)执行 dom 创建操作
+
+ -->
 
   <div id="editor">
     <h1>初始化流程</h1>
@@ -25,7 +55,6 @@
     })
 
     console.log(app.$options.render)
-
 
   </script>
 

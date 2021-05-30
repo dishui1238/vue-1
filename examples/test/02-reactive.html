@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-05-16 21:23:52
- * @LastEditTime: 2021-05-16 21:24:46
+ * @LastEditTime: 2021-05-30 12:04:51
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /Github/vue-1/examples/test/02-reactive.html
@@ -14,6 +14,17 @@
   <title>Vue源码剖析</title>
   <script src="../../dist/vue.js"></script>
 </head>
+
+<!--
+1. proxy(vm, `_data`, key)
+    代理 data 数据 到 实例上，data 中的 key 不能与 methods、props 中的重复
+
+2. observe(data, true /* asRootData */) 返回一个 ob 实例
+
+    Observer 对象 根据传入数据类型是 数组/对象，分别做响应式处理 observeArray、walk， 其中主要调用了 defineReactive
+    defineReactive 定义对象属性的 get/set，get负责添加依赖，set负责通知更新
+    Dep 负责管理一组 Watcher，包括 watcher 实例的增删及通知更新
+ -->
 
 <body>
   <div id="demo">

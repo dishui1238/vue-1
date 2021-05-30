@@ -279,6 +279,7 @@ class Watcher {
   }
 
   get() {
+    // 标识当前 watcher
     Dep.target = this;
     this.getter.call(this.vm);
     Dep.target = null;

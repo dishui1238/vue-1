@@ -923,13 +923,17 @@
     this.value = value;
     this.dep = new Dep();
     this.vmCount = 0;
+    // Object.defineProperty
     def(value, '__ob__', this);
+    // 判断是否为数组
     if (Array.isArray(value)) {
       if (hasProto) {
+        // 替换数组原型
         protoAugment(value, arrayMethods);
       } else {
         copyAugment(value, arrayMethods, arrayKeys);
       }
+      // 对数组响应式处理
       this.observeArray(value);
     } else {
       this.walk(value);
@@ -3961,10 +3965,10 @@
       // Vue.prototype.__patch__ is injected in entry points
       // based on the rendering backend used.
       if (!prevVnode) {
-        // initial render
+        // initial render 初始化渲染
         vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */);
       } else {
-        // updates
+        // updates 更新
         vm.$el = vm.__patch__(prevVnode, vnode);
       }
       restoreActiveInstance();
@@ -4083,13 +4087,17 @@
       };
     } else {
       updateComponent = function () {
+        // _render 获取 vdom
+        // _update 将传入 vdom 转换为 dom
         vm._update(vm._render(), hydrating);
       };
     }
 
     // we set this to vm._watcher inside the watcher's constructor
     // since the watcher's initial patch may call $forceUpdate (e.g. inside child
-    // component's mounted hook), which relies on vm._watcher being already defined
+    // component's mounted hook), which relies on vm._watcher being already
+
+    // watch 组件， updateComponent-更新组件函数
     new Watcher(vm, updateComponent, noop, {
       before: function before () {
         if (vm._isMounted && !vm._isDestroyed) {
@@ -4975,7 +4983,8 @@
 
   var uid$3 = 0;
 
-  function initMixin (Vue) {
+  function initMixin(Vue) {
+    // 实现_init初始化方法
     Vue.prototype._init = function (options) {
       var vm = this;
       // a uid
@@ -4992,6 +5001,7 @@
       // a flag to avoid this being observed
       vm._isVue = true;
       // merge options
+      // 合并选项, 添加了 direcives/filters/components
       if (options && options._isComponent) {
         // optimize internal component instantiation
         // since dynamic options merging is pretty slow, and none of the
@@ -5013,11 +5023,11 @@
       initLifecycle(vm);
       initEvents(vm);
       initRender(vm);
-      callHook(vm, 'beforeCreate');
+      callHook(vm, "beforeCreate");
       initInjections(vm); // resolve injections before data/props
       initState(vm);
       initProvide(vm); // resolve provide after data/props
-      callHook(vm, 'created');
+      callHook(vm, "created");
 
       /* istanbul ignore if */
       if (config.performance && mark) {
@@ -5032,8 +5042,11 @@
     };
   }
 
-  function initInternalComponent (vm, options) {
-    var opts = vm.$options = Object.create(vm.constructor.options);
+  function initInternalComponent(
+    vm,
+    options
+  ) {
+    var opts = (vm.$options = Object.create(vm.constructor.options));
     // doing this because it's faster than dynamic enumeration.
     var parentVnode = options._parentVnode;
     opts.parent = options.parent;
@@ -5051,7 +5064,7 @@
     }
   }
 
-  function resolveConstructorOptions (Ctor) {
+  function resolveConstructorOptions(Ctor) {
     var options = Ctor.options;
     if (Ctor.super) {
       var superOptions = resolveConstructorOptions(Ctor.super);
@@ -5072,10 +5085,10 @@
         }
       }
     }
-    return options
+    return options;
   }
 
-  function resolveModifiedOptions (Ctor) {
+  function resolveModifiedOptions(Ctor) {
     var modified;
     var latest = Ctor.options;
     var sealed = Ctor.sealedOptions;
@@ -5085,7 +5098,7 @@
         modified[key] = latest[key];
       }
     }
-    return modified
+    return modified;
   }
 
   function Vue (options) {
@@ -5857,7 +5870,7 @@
 
   function sameVnode (a, b) {
     return (
-      a.key === b.key &&
+      a.key === b.key && // key 没设置 undefined === undefined 永远为 true
       a.asyncFactory === b.asyncFactory && (
         (
           a.tag === b.tag &&
@@ -6207,7 +6220,9 @@
       }
     }
 
+    // 比较两组孩子节点
     function updateChildren (parentElm, oldCh, newCh, insertedVnodeQueue, removeOnly) {
+      // 设置收尾的四个游标以及相对应的节点
       var oldStartIdx = 0;
       var newStartIdx = 0;
       var oldEndIdx = oldCh.length - 1;
@@ -6216,6 +6231,7 @@
       var newEndIdx = newCh.length - 1;
       var newStartVnode = newCh[0];
       var newEndVnode = newCh[newEndIdx];
+      // 后面进行查找时所需的变量
       var oldKeyToIdx, idxInOld, vnodeToMove, refElm;
 
       // removeOnly is a special flag used only by <transition-group>
@@ -6227,37 +6243,49 @@
         checkDuplicateKeys(newCh);
       }
 
+      // 开始循环： 结束条件-开始游标不能超过结束游标
       while (oldStartIdx <= oldEndIdx && newStartIdx <= newEndIdx) {
+        // 游标调整
         if (isUndef(oldStartVnode)) {
           oldStartVnode = oldCh[++oldStartIdx]; // Vnode has been moved left
         } else if (isUndef(oldEndVnode)) {
           oldEndVnode = oldCh[--oldEndIdx];
         } else if (sameVnode(oldStartVnode, newStartVnode)) {
+          // 两个开头相同
           patchVnode(oldStartVnode, newStartVnode, insertedVnodeQueue, newCh, newStartIdx);
+          // 游标向后移动
           oldStartVnode = oldCh[++oldStartIdx];
           newStartVnode = newCh[++newStartIdx];
         } else if (sameVnode(oldEndVnode, newEndVnode)) {
+          // 两个结尾相同
           patchVnode(oldEndVnode, newEndVnode, insertedVnodeQueue, newCh, newEndIdx);
+          // 游标向前移动
           oldEndVnode = oldCh[--oldEndIdx];
           newEndVnode = newCh[--newEndIdx];
         } else if (sameVnode(oldStartVnode, newEndVnode)) { // Vnode moved right
+          // old 开始节点和 new 结束节点 相同
           patchVnode(oldStartVnode, newEndVnode, insertedVnodeQueue, newCh, newEndIdx);
+          // 移动该节点到队尾
           canMove && nodeOps.insertBefore(parentElm, oldStartVnode.elm, nodeOps.nextSibling(oldEndVnode.elm));
-          oldStartVnode = oldCh[++oldStartIdx];
-          newEndVnode = newCh[--newEndIdx];
+          oldStartVnode = oldCh[++oldStartIdx]; // 老的节点向前移动
+          newEndVnode = newCh[--newEndIdx]; // 新的节点向后移动
         } else if (sameVnode(oldEndVnode, newStartVnode)) { // Vnode moved left
+          //  老的尾和新的开始节点相同
           patchVnode(oldEndVnode, newStartVnode, insertedVnodeQueue, newCh, newStartIdx);
+          // 移动到队首
           canMove && nodeOps.insertBefore(parentElm, oldEndVnode.elm, oldStartVnode.elm);
           oldEndVnode = oldCh[--oldEndIdx];
           newStartVnode = newCh[++newStartIdx];
         } else {
+          // 首尾没找到相同的，从新的开头拿出一个节点，去老的数组查找
           if (isUndef(oldKeyToIdx)) { oldKeyToIdx = createKeyToOldIdx(oldCh, oldStartIdx, oldEndIdx); }
           idxInOld = isDef(newStartVnode.key)
             ? oldKeyToIdx[newStartVnode.key]
             : findIdxInOld(newStartVnode, oldCh, oldStartIdx, oldEndIdx);
-          if (isUndef(idxInOld)) { // New element
+          // 如果在老数组中没找到 - 新增
+            if (isUndef(idxInOld)) { // New element
             createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm, false, newCh, newStartIdx);
-          } else {
+          } else { // 否则更新
             vnodeToMove = oldCh[idxInOld];
             if (sameVnode(vnodeToMove, newStartVnode)) {
               patchVnode(vnodeToMove, newStartVnode, insertedVnodeQueue, newCh, newStartIdx);
@@ -6271,10 +6299,13 @@
           newStartVnode = newCh[++newStartIdx];
         }
       }
+      // 清理工作
+      // 如果老的结束了，新数组中剩下的要批量新增
       if (oldStartIdx > oldEndIdx) {
         refElm = isUndef(newCh[newEndIdx + 1]) ? null : newCh[newEndIdx + 1].elm;
         addVnodes(parentElm, refElm, newCh, newStartIdx, newEndIdx, insertedVnodeQueue);
       } else if (newStartIdx > newEndIdx) {
+        // 如果新的结束了，老数组中剩下的批量删除
         removeVnodes(oldCh, oldStartIdx, oldEndIdx);
       }
     }
@@ -6304,6 +6335,7 @@
       }
     }
 
+    // 比较两个虚拟 dom
     function patchVnode (
       oldVnode,
       vnode,
@@ -6345,33 +6377,39 @@
         return
       }
 
+
+      // 钩子调用
       var i;
       var data = vnode.data;
       if (isDef(data) && isDef(i = data.hook) && isDef(i = i.prepatch)) {
         i(oldVnode, vnode);
       }
 
+      // 1. 获取两个带比较节点的孩子
       var oldCh = oldVnode.children;
       var ch = vnode.children;
+      // 2. 属性更新
       if (isDef(data) && isPatchable(vnode)) {
         for (i = 0; i < cbs.update.length; ++i) { cbs.update[i](oldVnode, vnode); }
         if (isDef(i = data.hook) && isDef(i = i.update)) { i(oldVnode, vnode); }
       }
+      // 3. 没有文本
       if (isUndef(vnode.text)) {
+        // 双方均有孩子 比较子节点
         if (isDef(oldCh) && isDef(ch)) {
           if (oldCh !== ch) { updateChildren(elm, oldCh, ch, insertedVnodeQueue, removeOnly); }
-        } else if (isDef(ch)) {
+        } else if (isDef(ch)) { // 新增
           {
             checkDuplicateKeys(ch);
           }
           if (isDef(oldVnode.text)) { nodeOps.setTextContent(elm, ''); }
           addVnodes(elm, null, ch, 0, ch.length - 1, insertedVnodeQueue);
-        } else if (isDef(oldCh)) {
+        } else if (isDef(oldCh)) { // 删除
           removeVnodes(oldCh, 0, oldCh.length - 1);
-        } else if (isDef(oldVnode.text)) {
+        } else if (isDef(oldVnode.text)) { // 文本清空
           nodeOps.setTextContent(elm, '');
         }
-      } else if (oldVnode.text !== vnode.text) {
+      } else if (oldVnode.text !== vnode.text) { // 文本替换
         nodeOps.setTextContent(elm, vnode.text);
       }
       if (isDef(data)) {
@@ -11944,6 +11982,7 @@
 
     var options = this.$options;
     // resolve template/el and convert to render function
+    // 处理模板渲染
     if (!options.render) {
       var template = options.template;
       if (template) {
@@ -11958,6 +11997,7 @@
               );
             }
           }
+          // 如果是 dom 节点
         } else if (template.nodeType) {
           template = template.innerHTML;
         } else {
@@ -11966,6 +12006,7 @@
           }
           return this
         }
+        // 如果是 el
       } else if (el) {
         template = getOuterHTML(el);
       }
